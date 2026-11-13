@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Hospital | NovaMed Multi-Specialty Hospital</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        tailwind.config = { darkMode: ['class', '[data-theme="dark"]'], theme: { extend: { colors: { primary: 'var(--primary-color)', 'primary-dark': 'var(--primary-dark)', secondary: 'var(--secondary-color)', theme: { bg: 'var(--bg-main)', card: 'var(--bg-card)', text: 'var(--text-main)', muted: 'var(--text-muted)', border: 'var(--border-color)', } }, fontFamily: { sans: ['Inter', 'sans-serif'], } } } }
+    </script>
+</head>
+<body class="bg-theme text-theme antialiased overflow-x-hidden">
+    
+    <!-- Standard Header -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-3 group shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
+                        <i data-lucide="heart-pulse" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight">NovaMed</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden xl:flex space-x-7 items-center">
+                    <a href="index.html" class="text-theme-text hover:text-primary transition-colors whitespace-nowrap">Home</a>
+                    <a href="home-2.html" class="text-theme-text hover:text-primary transition-colors whitespace-nowrap">Home 2</a>
+                    <a href="hospital.html" class="text-primary font-medium transition-colors whitespace-nowrap">Hospital</a>
+                    <a href="departments.html" class="text-theme-text hover:text-primary transition-colors whitespace-nowrap">Departments</a>
+                    <a href="doctors.html" class="text-theme-text hover:text-primary transition-colors whitespace-nowrap">Doctors</a>
+                    <a href="testimonials.html" class="text-theme-text hover:text-primary transition-colors whitespace-nowrap">Testimonials</a>
+                    <a href="care-desk.html" class="text-theme-text hover:text-primary transition-colors whitespace-nowrap">Care Desk</a>
+                    <a href="patient-portal.html" class="text-theme-text hover:text-primary transition-colors whitespace-nowrap">Patient Portal</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="hidden xl:flex items-center gap-4 shrink-0">
+                    <button id="rtl-toggle" class="p-2 rounded-full hover:bg-teal-50 dark:hover:bg-teal-950/60 transition-colors" aria-label="Toggle RTL">
+                        <i id="rtl-icon" data-lucide="arrow-right-left" class="w-5 h-5 text-theme-text"></i>
+                    </button>
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-teal-50 dark:hover:bg-teal-950/60 transition-colors" aria-label="Toggle Theme">
+                        <i id="theme-icon" data-lucide="moon" class="w-5 h-5 text-theme-text"></i>
+                    </button>
+                    <a href="login.html" class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap">Login</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="xl:hidden flex items-center gap-2">
+                    <button id="mobile-menu-btn" class="p-2 text-theme-text">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav (hidden by default) -->
+        <div id="mobile-menu" class="hidden xl:hidden bg-theme-card border-b border-theme-border shadow-lg absolute w-full left-0">
+            <div class="px-4 pt-2 pb-6 space-y-3">
+                <a href="index.html" class="block text-theme-text py-2">Home</a>
+                <a href="home-2.html" class="block text-theme-text py-2">Home 2</a>
+                <a href="hospital.html" class="block text-primary font-medium py-2">Hospital</a>
+                <a href="departments.html" class="block text-theme-text py-2">Departments</a>
+                <a href="doctors.html" class="block text-theme-text py-2">Doctors</a>
+                <a href="testimonials.html" class="block text-theme-text py-2">Testimonials</a>
+                <a href="care-desk.html" class="block text-theme-text py-2">Care Desk</a>
+                <a href="patient-portal.html" class="block text-theme-text py-2">Patient Portal</a>
+                
+                <div class="border-t border-theme-border pt-4 flex flex-col gap-3">
+                    <div class="flex justify-center gap-6 items-center pb-2">
+                        <button id="mobile-theme-toggle" class="p-2 rounded-full hover:bg-teal-50 dark:hover:bg-teal-950/60 transition-colors bg-theme-card border border-theme-border shadow-sm" aria-label="Toggle Theme">
+                            <i id="mobile-theme-icon" data-lucide="moon" class="w-5 h-5 text-theme-text"></i>
+                        </button>
+                        <button id="mobile-rtl-toggle" class="p-2 rounded-full hover:bg-teal-50 dark:hover:bg-teal-950/60 transition-colors bg-theme-card border border-theme-border shadow-sm" aria-label="Toggle RTL">
+                            <i id="mobile-rtl-icon" data-lucide="arrow-right-left" class="w-5 h-5 text-theme-text"></i>
+                        </button>
+                    </div>
+                    <a href="login.html" class="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-medium transition-colors text-center w-full shadow-sm">Login</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <!-- SECTION 1: MISSION HERO -->
+        <section class="page-hero relative py-20 border-b border-theme-border text-center overflow-hidden flex items-center justify-center">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=1200&auto=format&fit=crop" alt="NovaMed Hospital Campus" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]"></div>
+            </div>
+            <div class="max-w-4xl mx-auto px-4 relative z-10" data-aos="fade-down">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-white">Redefining compassionate multi-specialty care.</h1>
+                <p class="text-xl text-slate-200 max-w-2xl mx-auto">We combine evidence-based surgical precision, advanced medical technology, and deeply empathetic nursing to heal every patient with dignity.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 2: MISSION & VISION -->
+        <section class="py-24 bg-theme border-b border-theme-border">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">
+                        <i data-lucide="compass" class="w-4 h-4"></i> Purpose &amp; Direction
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-black mb-4">Our Mission &amp; Vision</h2>
+                    <p class="text-xl text-theme-muted max-w-2xl mx-auto">Guiding every clinical decision, surgical procedure, and patient recovery milestone across our hospital.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Mission Card -->
+                    <div class="bg-theme-card border border-theme-border rounded-3xl p-10 hover-lift shadow-sm relative overflow-hidden flex flex-col justify-between" data-aos="fade-right">
+                        <div class="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+                        <div class="relative z-10">
+                            <div class="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-8">
+                                <i data-lucide="target" class="w-8 h-8"></i>
+                            </div>
+                            <div class="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-wider mb-4">Our Mission</div>
+                            <h3 class="text-2xl font-bold mb-4">Deliver accessible, world-class tertiary healthcare under one collaborative roof.</h3>
+                            <p class="text-theme-muted text-base leading-relaxed mb-6">
+                                We exist to eliminate fragmented referrals by uniting 28 medical and surgical departments into a single coordinated campus. Through rapid diagnostics, robotic surgical suites, and transparent digital billing, we empower patients and families to heal with clarity and confidence.
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-6 border-t border-theme-border text-sm font-semibold text-primary">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            <span>Patient-First • Evidence-Based • Ethical</span>
+                        </div>
+                    </div>
+
+                    <!-- Vision Card -->
+                    <div class="bg-theme-card border border-theme-border rounded-3xl p-10 hover-lift shadow-sm relative overflow-hidden flex flex-col justify-between" data-aos="fade-left">
+                        <div class="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+                        <div class="relative z-10">
+                            <div class="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-8">
+                                <i data-lucide="sparkles" class="w-8 h-8"></i>
+                            </div>
+                            <div class="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-wider mb-4">Our Vision</div>
+                            <h3 class="text-2xl font-bold mb-4">To stand as the regional benchmark for clinical safety, research, and restorative medicine.</h3>
+                            <p class="text-theme-muted text-base leading-relaxed mb-6">
+                                We envision a healthcare ecosystem where preventive screenings catch illness early, precision medicine personalizes every therapy, and seamless digital portals keep patients connected to their doctors long after discharge.
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-6 border-t border-theme-border text-sm font-semibold text-primary">
+                            <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                            <span>Innovative • Holistic • Accredited</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: OUR STORY -->
+        <section class="py-24 bg-theme-card">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-16 items-center">
+                    <div data-aos="fade-right">
+                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=800&auto=format&fit=crop" class="rounded-3xl shadow-xl w-full h-[500px] object-cover" alt="NovaMed Hospital Heritage">
+                    </div>
+                    <div data-aos="fade-left">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">
+                            <i data-lucide="building-2" class="w-4 h-4"></i> Roots &amp; Heritage
+                        </div>
+                        <h2 class="text-3xl md:text-4xl font-bold mb-6">25 years of clinical dedication</h2>
+                        <p class="text-theme-muted text-lg mb-6 leading-relaxed">Founded in 2001 as a 60-bed community surgical clinic, NovaMed grew from a conviction that complex medical cases demand unified collaboration between cardiologists, neurologists, surgeons, and primary physicians.</p>
+                        <p class="text-theme-muted text-lg mb-6 leading-relaxed">Over two decades, we expanded into a 320-bed JCI-accredited Multi-Specialty Hospital featuring hybrid operating theaters, Level-1 emergency trauma bays, and a fully integrated digital Patient Portal.</p>
+                        <p class="text-theme-muted text-lg leading-relaxed">Today, more than 140 senior consultants and 650 specialized nurses serve over 50,000 families each year with unwavering integrity.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: HOSPITAL VALUES -->
+        <section class="py-24 bg-theme border-y border-theme-border">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4" data-aos="fade-down">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Our Pillars
+                </div>
+                <h2 class="text-3xl md:text-5xl font-black mb-4" data-aos="fade-down">Our Core Clinical Values</h2>
+                <p class="text-xl text-theme-muted max-w-2xl mx-auto mb-16" data-aos="fade-down">The foundational standards guiding our physicians, nurses, and diagnostic teams every day.</p>
+                
+                <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
+                    <!-- Value 1 -->
+                    <div class="bg-theme-card rounded-2xl p-6 border border-theme-border hover-lift" data-aos="fade-up" data-aos-delay="100">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="heart" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-base mb-2">Compassion</h3>
+                        <p class="text-theme-muted text-sm">Every patient is treated with warmth, empathy, and respect for personal dignity.</p>
+                    </div>
+                    <!-- Value 2 -->
+                    <div class="bg-theme-card rounded-2xl p-6 border border-theme-border hover-lift" data-aos="fade-up" data-aos-delay="200">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-base mb-2">Patient Safety</h3>
+                        <p class="text-theme-muted text-sm">Zero-compromise sterilization, double-verified protocols, and continuous ICU monitoring.</p>
+                    </div>
+                    <!-- Value 3 -->
+                    <div class="bg-theme-card rounded-2xl p-6 border border-theme-border hover-lift" data-aos="fade-up" data-aos-delay="300">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="microscope" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-base mb-2">Precision</h3>
+                        <p class="text-theme-muted text-sm">Evidence-based diagnostics and minimally invasive surgical excellence.</p>
+                    </div>
+                    <!-- Value 4 -->
+                    <div class="bg-theme-card rounded-2xl p-6 border border-theme-border hover-lift" data-aos="fade-up" data-aos-delay="400">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-base mb-2">Teamwork</h3>
+                        <p class="text-theme-muted text-sm">Cross-departmental tumor and cardiac boards collaborating on complex cases.</p>
+                    </div>
+                    <!-- Value 5 -->
+                    <div class="bg-theme-card rounded-2xl p-6 border border-theme-border hover-lift" data-aos="fade-up" data-aos-delay="500">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="file-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-base mb-2">Transparency</h3>
+                        <p class="text-theme-muted text-sm">Honest medical communication, upfront estimates, and clear digital records.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: MEDICAL LEADERSHIP -->
+        <section class="py-24 bg-theme-card border-b border-theme-border">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">
+                        <i data-lucide="stethoscope" class="w-4 h-4"></i> Medical Board &amp; Directors
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-black mb-4">Hospital Leadership</h2>
+                    <p class="text-xl text-theme-muted max-w-2xl mx-auto">Accomplished department chairs and medical directors upholding the highest standards of clinical care.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Director 1 -->
+                    <div class="bg-theme border border-theme-border rounded-3xl overflow-hidden hover-lift shadow-sm text-center group" data-aos="fade-up" data-aos-delay="0">
+                        <div class="h-64 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=600&auto=format&fit=crop" alt="Dr. Maya Lin" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-4 inset-x-0 flex justify-center gap-3 text-white">
+                                <a href="#" class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-primary transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                                <a href="care-desk.html" class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-primary transition-colors"><i data-lucide="mail" class="w-4 h-4"></i></a>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-1">Dr. Maya Lin, MD</h3>
+                            <p class="text-primary font-medium text-sm mb-3">Chief Medical Officer</p>
+                            <p class="text-theme-muted text-xs leading-relaxed">Board-certified Internist with 20+ years overseeing multi-specialty hospital governance.</p>
+                        </div>
+                    </div>
+
+                    <!-- Director 2 -->
+                    <div class="bg-theme border border-theme-border rounded-3xl overflow-hidden hover-lift shadow-sm text-center group" data-aos="fade-up" data-aos-delay="100">
+                        <div class="h-64 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=600&auto=format&fit=crop" alt="Dr. Julian Vance" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-4 inset-x-0 flex justify-center gap-3 text-white">
+                                <a href="#" class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-primary transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                                <a href="care-desk.html" class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-primary transition-colors"><i data-lucide="mail" class="w-4 h-4"></i></a>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-1">Dr. Julian Vance, FACC</h3>
+                            <p class="text-primary font-medium text-sm mb-3">Chair of Cardiac Sciences</p>
+                            <p class="text-theme-muted text-xs leading-relaxed">Pioneering interventional cardiologist specializing in minimally invasive valve repair.</p>
+                        </div>
+                    </div>
+
+                    <!-- Director 3 -->
+                    <div class="bg-theme border border-theme-border rounded-3xl overflow-hidden hover-lift shadow-sm text-center group" data-aos="fade-up" data-aos-delay="200">
+                        <div class="h-64 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop" alt="Dr. Priya Patel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-4 inset-x-0 flex justify-center gap-3 text-white">
+                                <a href="#" class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-primary transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                                <a href="care-desk.html" class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-primary transition-colors"><i data-lucide="mail" class="w-4 h-4"></i></a>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-1">Dr. Priya Patel, PhD</h3>
+                            <p class="text-primary font-medium text-sm mb-3">Director of Quality &amp; Safety</p>
+                            <p class="text-theme-muted text-xs leading-relaxed">Leads JCI clinical accreditation, infection control standards, and patient advocacy.</p>
+                        </div>
+                    </div>
+
+                    <!-- Director 4 -->
+                    <div class="bg-theme border border-theme-border rounded-3xl overflow-hidden hover-lift shadow-sm text-center group" data-aos="fade-up" data-aos-delay="300">
+                        <div class="h-64 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?q=80&w=600&auto=format&fit=crop" alt="Dr. Samir Al-Mansoor" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-4 inset-x-0 flex justify-center gap-3 text-white">
+                                <a href="#" class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-primary transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                                <a href="care-desk.html" class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-primary transition-colors"><i data-lucide="mail" class="w-4 h-4"></i></a>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-1">Dr. Samir Al-Mansoor</h3>
+                            <p class="text-primary font-medium text-sm mb-3">Head of Robotic Surgery</p>
+                            <p class="text-theme-muted text-xs leading-relaxed">Over 3,500 complex laparoscopic and robotic surgical interventions performed safely.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: ACCREDITATIONS & MEDICAL AFFILIATIONS -->
+        <section class="py-24 bg-theme border-b border-theme-border">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">
+                        <i data-lucide="award" class="w-4 h-4"></i> Global Standards
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-black mb-4">Accreditations &amp; Affiliations</h2>
+                    <p class="text-xl text-theme-muted max-w-2xl mx-auto">Recognized nationally and internationally for surgical outcomes, laboratory accuracy, and hospital safety.</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <!-- Partner 1 -->
+                    <div class="bg-theme-card border border-theme-border rounded-2xl p-6 text-center hover-lift flex flex-col items-center justify-center gap-3 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
+                            <i data-lucide="award" class="w-7 h-7"></i>
+                        </div>
+                        <h4 class="font-bold text-base">JCI Gold Seal</h4>
+                        <p class="text-xs text-theme-muted">International patient safety &amp; surgical quality certification</p>
+                    </div>
+
+                    <!-- Partner 2 -->
+                    <div class="bg-theme-card border border-theme-border rounded-2xl p-6 text-center hover-lift flex flex-col items-center justify-center gap-3 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
+                            <i data-lucide="microscope" class="w-7 h-7"></i>
+                        </div>
+                        <h4 class="font-bold text-base">CAP &amp; NABL Labs</h4>
+                        <p class="text-xs text-theme-muted">99.9% diagnostic accuracy across pathology &amp; genomics</p>
+                    </div>
+
+                    <!-- Partner 3 -->
+                    <div class="bg-theme-card border border-theme-border rounded-2xl p-6 text-center hover-lift flex flex-col items-center justify-center gap-3 shadow-sm" data-aos="fade-up" data-aos-delay="200">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
+                            <i data-lucide="activity" class="w-7 h-7"></i>
+                        </div>
+                        <h4 class="font-bold text-base">Level-1 Trauma Center</h4>
+                        <p class="text-xs text-theme-muted">24/7 emergency neuro, cardiac &amp; critical care readiness</p>
+                    </div>
+
+                    <!-- Partner 4 -->
+                    <div class="bg-theme-card border border-theme-border rounded-2xl p-6 text-center hover-lift flex flex-col items-center justify-center gap-3 shadow-sm" data-aos="fade-up" data-aos-delay="300">
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
+                            <i data-lucide="heart-pulse" class="w-7 h-7"></i>
+                        </div>
+                        <h4 class="font-bold text-base">Academic Research Hub</h4>
+                        <p class="text-xs text-theme-muted">Collaborative oncology &amp; cardiac clinical trials network</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: CLINICAL OUTCOMES VISUALIZATION -->
+        <section class="py-24 bg-theme-card">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div data-aos="fade-right">
+                        <h2 class="text-3xl font-bold mb-6">How we deliver better outcomes</h2>
+                        <ul class="space-y-6 text-lg text-theme-muted">
+                            <li class="flex items-start gap-4">
+                                <i data-lucide="check-circle-2" class="text-primary w-6 h-6 shrink-0 mt-1"></i>
+                                <span><strong>Rapid Diagnostic Turnaround:</strong> On-site 3T MRI, PET-CT, and automated labs cut diagnosis wait times by 60%.</span>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <i data-lucide="check-circle-2" class="text-primary w-6 h-6 shrink-0 mt-1"></i>
+                                <span><strong>Patient Satisfaction:</strong> 98.6% of discharged patients recommend NovaMed for nursing care and doctor clarity.</span>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <i data-lucide="check-circle-2" class="text-primary w-6 h-6 shrink-0 mt-1"></i>
+                                <span><strong>Unified Digital Health:</strong> Patients book doctors, download reports, and settle bills effortlessly in one secure portal.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="relative" data-aos="zoom-in">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/5 rounded-full blur-3xl -z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=800&auto=format&fit=crop" class="rounded-3xl shadow-xl w-full" alt="Clinical outcomes and care">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: JOIN / BOOK CTA -->
+        <section class="py-24 bg-primary text-white text-center">
+            <div class="max-w-3xl mx-auto px-4" data-aos="fade-up">
+                <h2 class="text-3xl font-bold mb-6">Experience trusted medical care</h2>
+                <p class="text-xl opacity-90 mb-10">Schedule an appointment with our multi-specialty physicians or register for the NovaMed Patient Portal today.</p>
+                <a href="login.html" class="inline-block bg-white text-primary hover:bg-teal-50 px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:-translate-y-1 transition-all">Access Patient Portal</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Standard Footer -->
+    <footer class="bg-theme-card border-t border-theme-border pt-16 pb-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-12">
+                <div class="col-span-2 lg:col-span-2">
+                    <a href="index.html" class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white">
+                            <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-xl font-bold">NovaMed</span>
+                    </a>
+                    <p class="text-theme-muted text-sm leading-relaxed mb-6">
+                        A JCI-accredited multi-specialty hospital uniting advanced surgical innovation, 24/7 emergency medicine, and compassionate patient-centered healing.
+                    </p>
+                    <div class="flex gap-4 mt-2">
+                        <a href="#" class="w-10 h-10 rounded-full bg-theme border border-theme-border flex items-center justify-center text-primary hover:bg-primary hover:text-white hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-theme border border-theme-border flex items-center justify-center text-primary hover:bg-primary hover:text-white hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-theme border border-theme-border flex items-center justify-center text-primary hover:bg-primary hover:text-white hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-span-1">
+                    <h4 class="font-bold mb-4">Clinical</h4>
+                    <ul class="space-y-3 text-sm text-theme-muted">
+                        <li><a href="departments.html" class="hover:text-primary transition-colors">Departments</a></li>
+                        <li><a href="doctors.html" class="hover:text-primary transition-colors">Doctors</a></li>
+                        <li><a href="login.html" class="hover:text-primary transition-colors">Book Appointment</a></li>
+                        <li><a href="patient-portal.html" class="hover:text-primary transition-colors">Lab Reports</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-span-1">
+                    <h4 class="font-bold mb-4">Hospital</h4>
+                    <ul class="space-y-3 text-sm text-theme-muted">
+                        <li><a href="hospital.html" class="hover:text-primary transition-colors">About NovaMed</a></li>
+                        <li><a href="testimonials.html" class="hover:text-primary transition-colors">Testimonials</a></li>
+                        <li><a href="care-desk.html" class="hover:text-primary transition-colors">Care Desk</a></li>
+                        <li><a href="register.html" class="hover:text-primary transition-colors">Patient Registration</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-span-2 lg:col-span-2">
+                    <h4 class="font-bold mb-4">Health Bulletin</h4>
+                    <p class="text-sm text-theme-muted mb-4">Receive preventive screening tips and hospital camp schedules.</p>
+                    <form class="flex gap-2" onsubmit="event.preventDefault();">
+                        <input type="email" placeholder="Your email address" class="w-full bg-theme border border-theme-border rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                        <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-theme-border pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-theme-muted relative">
+                <p>&copy; 2026 NovaMed Multi-Specialty Hospital. All rights reserved.</p>
+
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark hover:-translate-y-1 hover:shadow-xl shadow-md transition-all group" title="Back to top">
+                    <i data-lucide="arrow-up" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@0.260.0"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
+

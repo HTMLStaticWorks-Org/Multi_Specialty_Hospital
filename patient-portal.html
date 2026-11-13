@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Portal | NovaMed Multi-Specialty Hospital</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = { darkMode: ['class', '[data-theme="dark"]'], theme: { extend: { colors: { primary: 'var(--primary-color)', 'primary-dark': 'var(--primary-dark)', secondary: 'var(--secondary-color)', theme: { bg: 'var(--bg-main)', card: 'var(--bg-card)', text: 'var(--text-main)', muted: 'var(--text-muted)', border: 'var(--border-color)', } }, fontFamily: { sans: ['Inter', 'sans-serif'], } } } }
+    </script>
+</head>
+<body class="bg-theme text-theme antialiased h-screen overflow-hidden flex flex-col">
+    
+    <!-- Dashboard Top Navbar -->
+    <header class="h-16 bg-theme-card border-b border-theme-border flex items-center justify-between px-4 sm:px-6 shrink-0 z-20 shadow-sm relative">
+        <div class="flex items-center gap-4">
+            <button id="sidebar-toggle" class="lg:hidden p-2 text-theme-muted hover:text-primary transition-colors">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            <a href="index.html" class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white">
+                    <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold">NovaMed</span>
+            </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <!-- Upcoming Visits Badge -->
+            <div class="hidden sm:flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
+                <i data-lucide="calendar-check" class="w-4 h-4 text-primary"></i>
+                <span id="headerAppointmentBadge" class="text-sm font-bold text-primary">2 Upcoming Visits</span>
+            </div>
+
+            <button id="theme-toggle" class="p-2 rounded-full hover:bg-teal-50 dark:hover:bg-teal-950/60 transition-colors"><i id="theme-icon" data-lucide="moon" class="w-5 h-5 text-theme-text"></i></button>
+            <button id="rtl-toggle" class="p-2 rounded-full hover:bg-teal-50 dark:hover:bg-teal-950/60 transition-colors"><i id="rtl-icon" data-lucide="arrow-right-left" class="w-5 h-5 text-theme-text"></i></button>
+            
+            <div class="h-8 w-px bg-theme-border mx-2 hidden sm:block"></div>
+            
+            <div class="flex items-center gap-3 cursor-pointer" onclick="document.querySelector('[data-target=&quot;profile&quot;]').click()">
+                <img src="https://i.pravatar.cc/100?img=11" alt="Profile" class="w-9 h-9 rounded-full border-2 border-theme-border">
+                <span class="font-medium text-sm hidden sm:block">Alex M.</span>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-theme-muted hidden sm:block"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- Sidebar -->
+        <aside id="dashboard-sidebar" class="w-64 bg-theme-card border-r border-theme-border flex flex-col shrink-0 absolute lg:static h-full z-30 transition-transform duration-300 -translate-x-full lg:translate-x-0 rtl:right-0 rtl:left-auto rtl:border-r-0 rtl:border-l rtl:border-theme-border">
+            <div class="p-4 flex items-center justify-between lg:hidden border-b border-theme-border">
+                <span class="font-bold">Patient Menu</span>
+                <button id="sidebar-close" class="p-2 text-theme-muted"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
+                
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-primary/10 text-primary border-l-4 border-primary transition-colors" data-target="overview">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Overview
+                </a>
+                
+                <div class="pt-4 pb-2 px-3 text-xs font-bold text-theme-muted uppercase tracking-wider">Care &amp; Booking</div>
+                
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="book-doctor">
+                    <i data-lucide="stethoscope" class="w-5 h-5"></i> Book Doctors
+                </a>
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="request-consult">
+                    <i data-lucide="calendar-plus" class="w-5 h-5"></i> Request Lab / Home Visit
+                </a>
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="tele-consult">
+                    <i data-lucide="video" class="w-5 h-5"></i> Video Tele-Consult
+                </a>
+                
+                <div class="pt-4 pb-2 px-3 text-xs font-bold text-theme-muted uppercase tracking-wider">Records &amp; Billing</div>
+                
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="my-appointments">
+                    <i data-lucide="calendar-check" class="w-5 h-5"></i> My Appointments
+                </a>
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="medical-reports">
+                    <i data-lucide="file-text" class="w-5 h-5"></i> View Reports
+                </a>
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="pay-bills">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i> Pay Bills
+                </a>
+                
+                <div class="pt-4 pb-2 px-3 text-xs font-bold text-theme-muted uppercase tracking-wider">Communication</div>
+                
+                <a href="#" class="dashboard-nav-link flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="messages">
+                    <div class="flex items-center gap-3"><i data-lucide="message-square" class="w-5 h-5"></i> Care Messages</div>
+                    <span class="bg-primary text-white text-xs px-2 py-0.5 rounded-full">2</span>
+                </a>
+                <a href="#" class="dashboard-nav-link flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="notifications">
+                    <div class="flex items-center gap-3"><i data-lucide="bell" class="w-5 h-5"></i> Alerts</div>
+                    <span class="bg-primary text-white text-xs px-2 py-0.5 rounded-full">1</span>
+                </a>
+                
+                <div class="pt-4 pb-2 px-3 text-xs font-bold text-theme-muted uppercase tracking-wider">Account</div>
+                
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="profile">
+                    <i data-lucide="user" class="w-5 h-5"></i> Patient Profile
+                </a>
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted border-l-4 border-transparent hover:bg-theme transition-colors" data-target="settings">
+                    <i data-lucide="settings" class="w-5 h-5"></i> Settings
+                </a>
+                
+            </div>
+            
+            <div class="p-4 border-t border-theme-border">
+                <a href="#" class="dashboard-nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-theme-muted hover:text-primary hover:bg-primary/10 transition-colors" data-target="logout">
+                    <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 bg-theme overflow-y-auto p-4 sm:p-8">
+            <div class="max-w-6xl mx-auto">
+                
+                <!-- 1. OVERVIEW SECTION -->
+                <div id="overview" class="dashboard-section animate-[fadeIn_0.3s_ease-in-out]">
+                    <!-- Welcome Banner -->
+                    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-dark via-primary to-secondary text-white p-6 sm:p-8 mb-8 shadow-lg">
+                        <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-white/10 blur-2xl"></div>
+                        <div class="absolute -bottom-20 right-1/3 w-56 h-56 rounded-full bg-white/10 blur-3xl"></div>
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div class="flex items-center gap-4 sm:gap-5">
+                                <div class="relative shrink-0">
+                                    <img src="https://i.pravatar.cc/100?img=11" alt="Alex M." class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-white/40 shadow-md">
+                                    <span class="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-secondary border-2 border-white"></span>
+                                </div>
+                                <div>
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 border border-white/25 text-xs font-semibold mb-2 backdrop-blur-sm">
+                                        <i data-lucide="heart-pulse" class="w-3.5 h-3.5 text-white"></i> Patient ID: #NM-4821 • Blood Group O+
+                                    </div>
+                                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight"><span id="welcome-greeting">Welcome</span>, Alex! <span class="inline-block origin-[70%_70%] animate-[wave_2s_ease-in-out_infinite]">👋</span></h1>
+                                    <p class="text-teal-100 text-sm sm:text-base mt-1">You have <strong class="text-white">2 upcoming doctor visits</strong>, <strong class="text-white">3 verified lab reports</strong>, and <strong class="text-white">$240 pending</strong> in billing.</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-3 shrink-0">
+                                <button type="button" onclick="document.querySelector('[data-target=&quot;book-doctor&quot;]').click()" class="inline-flex items-center gap-2 bg-white text-primary-dark hover:bg-teal-50 px-5 py-2.5 rounded-full font-bold text-sm shadow-md hover:-translate-y-0.5 transition-all">
+                                    <i data-lucide="stethoscope" class="w-4 h-4"></i> Book Doctor
+                                </button>
+                                <button type="button" onclick="document.querySelector('[data-target=&quot;medical-reports&quot;]').click()" class="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 border border-white/30 text-white px-5 py-2.5 rounded-full font-bold text-sm backdrop-blur-sm hover:-translate-y-0.5 transition-all">
+                                    <i data-lucide="file-text" class="w-4 h-4"></i> View Reports
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <style>@keyframes wave{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(14deg)}20%,40%{transform:rotate(-8deg)}50%{transform:rotate(10deg)}}</style>
+                    <script>
+                        (function () {
+                            var h = new Date().getHours();
+                            var g = h < 12 ? 'Good morning' : (h < 17 ? 'Good afternoon' : 'Good evening');
+                            document.getElementById('welcome-greeting').textContent = g;
+                        })();
+                    </script>
+                    
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4 mb-8">
+                        <div class="bg-theme-card p-6 lg:p-5 rounded-2xl border border-theme-border shadow-sm min-h-[140px] cursor-pointer hover:border-primary transition-colors" onclick="document.querySelector('[data-target=&quot;my-appointments&quot;]').click()">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center"><i data-lucide="calendar-check" class="w-5 h-5"></i></div>
+                                <span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">Next: Tomorrow</span>
+                            </div>
+                            <div id="statAppointmentsCount" class="text-3xl font-black mb-1">2</div>
+                            <div class="text-sm font-medium text-theme-muted">Upcoming Appointments</div>
+                        </div>
+                        
+                        <div class="bg-theme-card p-6 lg:p-5 rounded-2xl border border-theme-border shadow-sm min-h-[140px] cursor-pointer hover:border-primary transition-colors" onclick="document.querySelector('[data-target=&quot;medical-reports&quot;]').click()">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+                                <span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">3 Ready</span>
+                            </div>
+                            <div class="text-3xl font-black mb-1">14</div>
+                            <div class="text-sm font-medium text-theme-muted">Diagnostic Lab Reports</div>
+                        </div>
+
+                        <div class="bg-theme-card p-6 lg:p-5 rounded-2xl border border-theme-border shadow-sm min-h-[140px] cursor-pointer hover:border-primary transition-colors" onclick="document.querySelector('[data-target=&quot;pay-bills&quot;]').click()">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center"><i data-lucide="credit-card" class="w-5 h-5"></i></div>
+                            </div>
+                            <div id="statBillsBalance" class="text-3xl font-black mb-1">$240</div>
+                            <div class="text-sm font-medium text-theme-muted">Pending Hospital Bills</div>
+                        </div>
+
+                        <div class="bg-theme-card p-6 lg:p-5 rounded-2xl border border-theme-border shadow-sm min-h-[140px]">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
+                            </div>
+                            <div class="text-3xl font-black mb-1">4</div>
+                            <div class="text-sm font-medium text-theme-muted">Active Prescriptions</div>
+                        </div>
+                    </div>
+
+                    <!-- Chart & Activity -->
+                    <div class="grid xl:grid-cols-3 gap-6">
+                        <div class="xl:col-span-2 bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm">
+                            <h3 class="font-bold text-base mb-4">Resting Heart Rate &amp; Wellness Trend (BPM)</h3>
+                            <div class="w-full h-[300px]">
+                                <canvas id="activityChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-bold text-base">Care Team Messages</h3>
+                                <a href="#" onclick="event.preventDefault(); document.querySelector('[data-target=&quot;messages&quot;]').click()" class="text-primary text-sm font-medium">View all</a>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex gap-3">
+                                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=100&auto=format&fit=crop" class="w-10 h-10 rounded-full shrink-0 object-cover">
+                                    <div class="min-w-0">
+                                        <div class="flex flex-wrap justify-between gap-x-2">
+                                            <h4 class="font-bold text-sm">Dr. Sarah Jenkins</h4>
+                                            <span class="text-xs text-theme-muted whitespace-nowrap">10m ago</span>
+                                        </div>
+                                        <p class="text-sm text-theme-muted line-clamp-2">Your echocardiogram looks healthy. See you tomorrow at 10 AM.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3">
+                                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=100&auto=format&fit=crop" class="w-10 h-10 rounded-full shrink-0 object-cover">
+                                    <div class="min-w-0">
+                                        <div class="flex flex-wrap justify-between gap-x-2">
+                                            <h4 class="font-bold text-sm">NovaMed Lab Desk</h4>
+                                            <span class="text-xs text-theme-muted whitespace-nowrap">Yesterday</span>
+                                        </div>
+                                        <p class="text-sm text-theme-muted line-clamp-2">Complete Blood Count &amp; Lipid Panel PDF has been uploaded.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. MY APPOINTMENTS SECTION -->
+                <div id="my-appointments" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-xl font-bold">My Scheduled Appointments</h1>
+                        <button type="button" onclick="document.querySelector('[data-target=&quot;book-doctor&quot;]').click()" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Book New Doctor
+                        </button>
+                    </div>
+
+                    <div id="myAppointmentsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm relative group">
+                            <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-4"><i data-lucide="heart-pulse" class="w-6 h-6"></i></div>
+                            <h3 class="font-bold text-base mb-2">Dr. Sarah Jenkins, MD</h3>
+                            <p class="text-sm text-theme-muted mb-4">Cardiology Follow-Up • Tomorrow, 10:00 AM ($140)</p>
+                            <div class="flex items-center justify-between text-sm font-medium border-t border-theme-border pt-4">
+                                <span class="text-primary">Heart Wing, Rm 204</span>
+                                <span class="bg-primary/10 text-primary px-2 py-1 rounded text-xs">Confirmed</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm relative group">
+                            <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-4"><i data-lucide="shield-plus" class="w-6 h-6"></i></div>
+                            <h3 class="font-bold text-base mb-2">Dr. David Miller, MS</h3>
+                            <p class="text-sm text-theme-muted mb-4">Orthopedics Review • Nov 20, 3:30 PM ($135)</p>
+                            <div class="flex items-center justify-between text-sm font-medium border-t border-theme-border pt-4">
+                                <span class="text-primary">Ortho Wing, Rm 112</span>
+                                <span class="bg-primary/10 text-primary px-2 py-1 rounded text-xs">Confirmed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. BOOK DOCTORS SECTION -->
+                <div id="book-doctor" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-6">Book a Specialist Doctor</h1>
+                    <div class="bg-theme-card border border-theme-border p-6 rounded-2xl mb-6 shadow-sm">
+                        <div class="relative max-w-xl">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="search" class="w-5 h-5 text-theme-muted"></i>
+                            </div>
+                            <input type="text" id="portalDoctorSearch" class="w-full pl-10 pr-4 py-3 bg-theme border border-theme-border rounded-xl focus:ring-1 focus:ring-primary" placeholder="Search doctors by name or department (e.g. Cardiology, Neurology)...">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Doctor 1 -->
+                        <div class="portal-doctor-card bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm flex flex-col">
+                            <div class="flex items-center gap-3 mb-4">
+                                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=150&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold">Dr. Sarah Jenkins</h4>
+                                    <div class="text-xs text-theme-muted"><i data-lucide="star" class="w-3 h-3 inline text-primary"></i> 4.9 (124 reviews)</div>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-base mb-2">Interventional Cardiology</h3>
+                            <p class="text-sm text-theme-muted mb-4 flex-1">Heart Wing • Next open slot: Tomorrow, 10:30 AM.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-theme-border">
+                                <span class="font-bold text-primary text-sm">$140 / Visit</span>
+                                <button type="button" class="book-doctor-btn text-primary text-sm font-bold hover:underline" data-doctor="Dr. Sarah Jenkins" data-dept="Cardiology" data-fee="$140">Book Doctor</button>
+                            </div>
+                        </div>
+
+                        <!-- Doctor 2 -->
+                        <div class="portal-doctor-card bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm flex flex-col">
+                            <div class="flex items-center gap-3 mb-4">
+                                <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=150&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold">Dr. Julian Vance</h4>
+                                    <div class="text-xs text-theme-muted"><i data-lucide="star" class="w-3 h-3 inline text-primary"></i> 5.0 (98 reviews)</div>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-base mb-2">Neurology &amp; Spine</h3>
+                            <p class="text-sm text-theme-muted mb-4 flex-1">Neuro Center • Next open slot: Today, 4:15 PM.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-theme-border">
+                                <span class="font-bold text-primary text-sm">$160 / Visit</span>
+                                <button type="button" class="book-doctor-btn text-primary text-sm font-bold hover:underline" data-doctor="Dr. Julian Vance" data-dept="Neurology" data-fee="$160">Book Doctor</button>
+                            </div>
+                        </div>
+
+                        <!-- Doctor 3 -->
+                        <div class="portal-doctor-card bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm flex flex-col">
+                            <div class="flex items-center gap-3 mb-4">
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=150&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold">Dr. Emily Chen</h4>
+                                    <div class="text-xs text-theme-muted"><i data-lucide="star" class="w-3 h-3 inline text-primary"></i> 4.8 (162 reviews)</div>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-base mb-2">Pediatrics &amp; Family Care</h3>
+                            <p class="text-sm text-theme-muted mb-4 flex-1">Child Block • Next open slot: Tomorrow, 11:00 AM.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-theme-border">
+                                <span class="font-bold text-primary text-sm">$95 / Visit</span>
+                                <button type="button" class="book-doctor-btn text-primary text-sm font-bold hover:underline" data-doctor="Dr. Emily Chen" data-dept="Pediatrics" data-fee="$95">Book Doctor</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. VIDEO TELE-CONSULT SECTION -->
+                <div id="tele-consult" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-6">Schedule a Video Tele-Consultation</h1>
+                    <div class="bg-theme-card border border-theme-border rounded-2xl p-6 sm:p-8 max-w-3xl shadow-sm">
+                        <form class="space-y-6 portal-action-form" data-success-msg="Video tele-consultation request submitted! Link will appear in your Appointments.">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Primary Health Concern</label>
+                                <input type="text" required placeholder="e.g. Blood pressure medication review or post-op check" class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary">
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Department</label>
+                                    <select class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary">
+                                        <option>Cardiology</option>
+                                        <option>Neurology</option>
+                                        <option>Orthopedics</option>
+                                        <option>Pediatrics</option>
+                                        <option>Internal Medicine</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Preferred Time Slot</label>
+                                    <input type="date" class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Symptoms &amp; Notes for Doctor</label>
+                                <textarea rows="4" placeholder="Share current symptoms, vitals, or medications..." class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Insurance Policy ID (Optional)</label>
+                                <input type="text" placeholder="e.g. BCBS-994021" class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary">
+                            </div>
+                            <button type="submit" class="bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-primary-dark">Confirm Tele-Consult</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 5. REQUEST LAB / HOME VISIT SECTION -->
+                <div id="request-consult" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-6">Request Home Blood Collection or Lab Test</h1>
+                    <div class="bg-theme-card border border-theme-border rounded-2xl p-6 sm:p-8 max-w-3xl shadow-sm">
+                        <p class="text-theme-muted mb-6">Schedule a certified NovaMed phlebotomist to collect lab samples at your home, or book an imaging scan at our campus.</p>
+                        <form class="space-y-6 portal-action-form" data-success-msg="Diagnostic lab collection scheduled! Technician details sent to your alerts.">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Diagnostic Panel or Test</label>
+                                <input type="text" required placeholder="e.g. Complete Blood Count, Lipid Panel, Thyroid Profile" class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Home Address / Referring Physician</label>
+                                <textarea rows="4" placeholder="Provide collection address and any fasting requirements..." class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary"></textarea>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Preferred Collection Date</label>
+                                    <input type="date" class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Number of Patients</label>
+                                    <input type="number" min="1" value="1" class="w-full bg-theme border border-theme-border rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary">
+                                </div>
+                            </div>
+                            <button type="submit" class="bg-primary hover:bg-primary-dark text-white font-bold px-6 py-3 rounded-lg hover:opacity-90">Schedule Collection</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 6. PAY BILLS SECTION -->
+                <div id="pay-bills" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-6">Hospital Billing &amp; Payments</h1>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gradient-to-br from-primary to-primary-dark p-8 rounded-2xl text-white shadow-lg md:col-span-2 relative overflow-hidden">
+                            <i data-lucide="credit-card" class="absolute -right-6 -bottom-6 w-48 h-48 opacity-20"></i>
+                            <h3 class="text-white/80 font-medium mb-2">Total Outstanding Balance</h3>
+                            <div id="outstandingBalance" class="text-5xl sm:text-6xl font-black mb-4">$240.00 <span class="text-2xl font-medium">USD</span></div>
+                            <p class="text-sm text-white/90">Insurance Coverage Applied YTD: $4,850.00</p>
+                        </div>
+                        <div class="bg-theme-card border border-theme-border p-6 rounded-2xl shadow-sm flex flex-col justify-center gap-4">
+                            <button type="button" id="payAllBillsBtn" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary-dark transition-colors">Pay Total Balance</button>
+                            <button type="button" onclick="document.querySelector('[data-target=&quot;medical-reports&quot;]').click()" class="w-full border border-theme-border text-theme-text font-bold py-3 rounded-lg hover:bg-theme">View Linked Reports</button>
+                        </div>
+                    </div>
+
+                    <h3 class="font-bold text-base mb-4">Invoices &amp; Payment History</h3>
+                    <div class="bg-theme-card border border-theme-border rounded-2xl shadow-sm overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="bg-theme border-b border-theme-border">
+                                    <th class="p-4 font-medium text-theme-muted text-sm">Date</th>
+                                    <th class="p-4 font-medium text-theme-muted text-sm">Description</th>
+                                    <th class="p-4 font-medium text-theme-muted text-sm">Status</th>
+                                    <th class="p-4 font-medium text-theme-muted text-sm text-right">Amount</th>
+                                    <th class="p-4 font-medium text-theme-muted text-sm text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-theme-border hover:bg-theme transition-colors">
+                                    <td class="p-4 text-sm">Nov 11, 2026</td>
+                                    <td class="p-4 text-sm font-medium">Cardiology Consultation &amp; ECG (Inv #NM-884)</td>
+                                    <td class="p-4"><span class="invoice-status-badge bg-primary/10 text-primary text-xs px-2 py-1 rounded font-semibold">Pending</span></td>
+                                    <td class="p-4 text-sm font-bold text-primary text-right">$140.00</td>
+                                    <td class="p-4 text-right"><button type="button" class="pay-invoice-btn bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary-dark" data-amount="140" data-invoice="#NM-884">Pay Now</button></td>
+                                </tr>
+                                <tr class="border-b border-theme-border hover:bg-theme transition-colors">
+                                    <td class="p-4 text-sm">Nov 08, 2026</td>
+                                    <td class="p-4 text-sm font-medium">Comprehensive Lipid &amp; CBC Blood Panel (Inv #NM-869)</td>
+                                    <td class="p-4"><span class="invoice-status-badge bg-primary/10 text-primary text-xs px-2 py-1 rounded font-semibold">Pending</span></td>
+                                    <td class="p-4 text-sm font-bold text-primary text-right">$100.00</td>
+                                    <td class="p-4 text-right"><button type="button" class="pay-invoice-btn bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary-dark" data-amount="100" data-invoice="#NM-869">Pay Now</button></td>
+                                </tr>
+                                <tr class="hover:bg-theme transition-colors">
+                                    <td class="p-4 text-sm">Oct 19, 2026</td>
+                                    <td class="p-4 text-sm font-medium">Orthopedic Knee MRI Co-Pay (Inv #NM-792)</td>
+                                    <td class="p-4"><span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded font-semibold">Paid</span></td>
+                                    <td class="p-4 text-sm font-bold text-theme-muted text-right">$185.00</td>
+                                    <td class="p-4 text-right"><button type="button" disabled class="text-theme-muted text-xs font-medium">Receipt</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 7. MEDICAL REPORTS SECTION -->
+                <div id="medical-reports" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-6">Diagnostic &amp; Lab Reports</h1>
+                    <div class="bg-theme-card border border-theme-border rounded-2xl shadow-sm overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="bg-theme border-b border-theme-border">
+                                    <th class="p-4 font-medium text-theme-muted text-sm">Doctor</th>
+                                    <th class="p-4 font-medium text-theme-muted text-sm">Report Name</th>
+                                    <th class="p-4 font-medium text-theme-muted text-sm">Department</th>
+                                    <th class="p-4 font-medium text-theme-muted text-sm">Status</th>
+                                    <th class="p-4 font-medium text-theme-muted text-sm">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-theme-border">
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-3">
+                                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=100&auto=format&fit=crop" class="w-8 h-8 rounded-full object-cover">
+                                            <span class="font-medium text-sm">Dr. Sarah Jenkins</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4 text-sm text-theme-muted">2D Cardiac Echocardiogram</td>
+                                    <td class="p-4"><span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">Cardiology</span></td>
+                                    <td class="p-4"><span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">Ready</span></td>
+                                    <td class="p-4">
+                                        <button type="button" class="view-report-btn text-primary text-sm font-medium hover:underline"
+                                            data-report-title="2D Cardiac Echocardiogram Report"
+                                            data-report-meta="Dr. Sarah Jenkins • Cardiology Wing • Nov 11, 2026"
+                                            data-report-summary="Left ventricular ejection fraction (LVEF) measured at 62% (Normal). Normal heart valve morphology with no pericardial effusion or regional wall motion abnormality. Continue routine wellness follow-up.">
+                                            View Report
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-theme-border">
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-3">
+                                            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=100&auto=format&fit=crop" class="w-8 h-8 rounded-full object-cover">
+                                            <span class="font-medium text-sm">Dr. Alex Turner</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4 text-sm text-theme-muted">Complete Blood Count &amp; Lipid Panel</td>
+                                    <td class="p-4"><span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">Pathology Lab</span></td>
+                                    <td class="p-4"><span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">Ready</span></td>
+                                    <td class="p-4">
+                                        <button type="button" class="view-report-btn text-primary text-sm font-medium hover:underline"
+                                            data-report-title="Complete Blood Count &amp; Lipid Profile"
+                                            data-report-meta="NovaMed Central Pathology • Verified Nov 08, 2026"
+                                            data-report-summary="Hemoglobin: 14.6 g/dL (Normal). WBC: 6,400 /uL. Total Cholesterol: 172 mg/dL, LDL: 94 mg/dL, HDL: 56 mg/dL, Fasting Glucose: 89 mg/dL. All metabolic markers are within optimal range.">
+                                            View Report
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-3">
+                                            <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?q=80&w=100&auto=format&fit=crop" class="w-8 h-8 rounded-full object-cover">
+                                            <span class="font-medium text-sm">Dr. David Miller</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4 text-sm text-theme-muted">Right Knee 3T MRI Scan</td>
+                                    <td class="p-4"><span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">Orthopedics</span></td>
+                                    <td class="p-4"><span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">Verified</span></td>
+                                    <td class="p-4">
+                                        <button type="button" class="view-report-btn text-primary text-sm font-medium hover:underline"
+                                            data-report-title="3-Tesla Knee MRI Radiology Summary"
+                                            data-report-meta="Dr. David Miller • Orthopedic Imaging • Oct 19, 2026"
+                                            data-report-summary="Cruciate and collateral ligaments intact. Mild medial meniscal wear without displaced tear. Joint alignment preserved; physiotherapy recommended twice weekly.">
+                                            View Report
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 8. MESSAGES SECTION -->
+                <div id="messages" class="dashboard-section hidden h-[80vh] md:h-[75vh] flex flex-col animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-4 shrink-0">Care Team Messages</h1>
+                    <div class="bg-theme-card border border-theme-border rounded-2xl shadow-sm flex flex-col md:flex-row flex-1 overflow-hidden">
+                        <!-- Chat List -->
+                        <div class="w-full md:w-1/3 h-[30%] md:h-full border-b md:border-b-0 md:border-r border-theme-border flex flex-col bg-theme shrink-0">
+                            <div class="p-4 border-b border-theme-border">
+                                <input type="text" placeholder="Search doctors..." class="w-full bg-theme-card border border-theme-border rounded-lg px-3 py-2 text-sm">
+                            </div>
+                            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                                <div class="p-4 border-b border-theme-border bg-theme-card cursor-pointer flex gap-3">
+                                    <div class="relative">
+                                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=100&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover">
+                                        <div class="w-3 h-3 bg-secondary border-2 border-white rounded-full absolute bottom-0 right-0"></div>
+                                    </div>
+                                    <div class="flex-1 overflow-hidden">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <h4 class="font-bold text-sm">Dr. Sarah Jenkins</h4>
+                                            <span class="text-xs text-primary font-bold">10:42 AM</span>
+                                        </div>
+                                        <p class="text-xs text-theme-muted truncate text-primary font-medium">Your echocardiogram looks healthy.</p>
+                                    </div>
+                                </div>
+                                <div class="p-4 border-b border-theme-border hover:bg-theme-card transition-colors cursor-pointer flex gap-3">
+                                    <div class="relative">
+                                        <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?q=80&w=100&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover">
+                                    </div>
+                                    <div class="flex-1 overflow-hidden">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <h4 class="font-bold text-sm">Dr. David Miller</h4>
+                                            <span class="text-xs text-theme-muted">Yesterday</span>
+                                        </div>
+                                        <p class="text-xs text-theme-muted truncate">Keep up your knee mobility exercises.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Chat Window -->
+                        <div class="w-full md:w-2/3 flex-1 md:h-full flex flex-col relative">
+                            <div class="p-4 border-b border-theme-border flex items-center justify-between bg-theme-card">
+                                <div class="flex items-center gap-3">
+                                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=100&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                        <h4 class="font-bold">Dr. Sarah Jenkins, MD</h4>
+                                        <span class="text-xs text-primary">Cardiology Department • Online</span>
+                                    </div>
+                                </div>
+                                <button class="p-2 text-theme-muted"><i data-lucide="more-vertical" class="w-5 h-5"></i></button>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-theme custom-scrollbar">
+                                <!-- Msg Received -->
+                                <div class="flex gap-3">
+                                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=100&auto=format&fit=crop" class="w-8 h-8 rounded-full shrink-0 object-cover">
+                                    <div class="bg-theme-card border border-theme-border p-3 rounded-2xl rounded-tl-none max-w-[80%] text-sm">
+                                        Hello Alex, I reviewed your latest lipid profile and ECG readings ahead of tomorrow's visit.
+                                        <div class="text-[10px] text-theme-muted mt-1 text-right">10:30 AM</div>
+                                    </div>
+                                </div>
+                                <!-- Msg Sent -->
+                                <div class="flex gap-3 justify-end">
+                                    <div class="bg-primary text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] text-sm">
+                                        Thank you, Dr. Jenkins! Should I continue my morning dosage before fasting labs?
+                                        <div class="text-[10px] text-white/70 mt-1 text-right">10:40 AM</div>
+                                    </div>
+                                </div>
+                                <!-- Msg Received -->
+                                <div class="flex gap-3">
+                                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=100&auto=format&fit=crop" class="w-8 h-8 rounded-full shrink-0 object-cover">
+                                    <div class="bg-theme-card border border-theme-border p-3 rounded-2xl rounded-tl-none max-w-[80%] text-sm">
+                                        Yes, take your regular morning dose with water. Your echocardiogram looks healthy. See you tomorrow at 10 AM!
+                                        <div class="text-[10px] text-theme-muted mt-1 text-right">10:42 AM</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 border-t border-theme-border bg-theme-card flex gap-2 items-center">
+                                <button class="p-2 text-theme-muted"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
+                                <input type="text" placeholder="Message your doctor..." class="flex-1 bg-theme border border-theme-border rounded-full px-4 py-2 text-sm focus:outline-none focus:border-primary">
+                                <button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shrink-0"><i data-lucide="send" class="w-4 h-4 ml-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. NOTIFICATIONS SECTION -->
+                <div id="notifications" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-6">Patient Alerts &amp; Notifications</h1>
+                    <div class="bg-theme-card border border-theme-border rounded-2xl shadow-sm">
+                        <div class="p-4 border-b border-theme-border flex items-center gap-4 bg-primary/5">
+                            <div class="w-10 h-10 bg-primary/20 text-primary rounded-full flex items-center justify-center shrink-0"><i data-lucide="file-check" class="w-5 h-5"></i></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium"><span class="font-bold">2D Cardiac Echocardiogram</span> report is verified and ready to view.</p>
+                                <p class="text-xs text-theme-muted">2 hours ago</p>
+                            </div>
+                            <div class="w-2 h-2 bg-primary rounded-full"></div>
+                        </div>
+                        <div class="p-4 border-b border-theme-border flex items-center gap-4 hover:bg-theme transition-colors">
+                            <div class="w-10 h-10 bg-primary/20 text-primary rounded-full flex items-center justify-center shrink-0"><i data-lucide="calendar-check" class="w-5 h-5"></i></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">Appointment confirmed with <span class="font-bold text-primary">Dr. Sarah Jenkins</span> for Tomorrow at 10:00 AM.</p>
+                                <p class="text-xs text-theme-muted">1 day ago</p>
+                            </div>
+                        </div>
+                        <div class="p-4 border-b border-theme-border flex items-center gap-4 hover:bg-theme transition-colors">
+                            <div class="w-10 h-10 bg-primary/10 text-primary rounded-full flex items-center justify-center shrink-0"><i data-lucide="credit-card" class="w-5 h-5"></i></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">Hospital invoice #NM-884 ($140.00) is ready for online payment.</p>
+                                <p class="text-xs text-theme-muted">3 days ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. PATIENT PROFILE SECTION -->
+                <div id="profile" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-6">Patient Profile &amp; Insurance</h1>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="md:col-span-1">
+                            <div class="bg-theme-card border border-theme-border rounded-2xl p-6 text-center shadow-sm">
+                                <div class="relative w-24 h-24 mx-auto mb-4">
+                                    <img src="https://i.pravatar.cc/100?img=11" class="w-full h-full rounded-full object-cover">
+                                    <button class="absolute bottom-0 right-0 bg-primary text-white p-1.5 rounded-full border-2 border-white"><i data-lucide="camera" class="w-4 h-4"></i></button>
+                                </div>
+                                <h3 class="font-bold text-lg">Alex Morgan</h3>
+                                <p class="text-sm text-theme-muted mb-4">Patient ID: #NM-4821</p>
+                                <div class="flex items-center justify-center gap-1 text-primary text-sm mb-4 font-semibold">
+                                    <i data-lucide="heart-pulse" class="w-4 h-4"></i> Blood Group: O+
+                                </div>
+                                <button type="button" onclick="document.querySelector('[data-target=&quot;medical-reports&quot;]').click()" class="w-full border border-theme-border text-theme-text font-medium py-2 rounded-lg hover:bg-theme">View Medical History</button>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <div class="bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm">
+                                <h3 class="font-bold text-base mb-4">Patient Information</h3>
+                                <form class="space-y-4 portal-action-form" data-success-msg="Patient profile details saved successfully.">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">First Name</label>
+                                            <input type="text" value="Alex" class="w-full bg-theme border border-theme-border rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-primary">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Last Name</label>
+                                            <input type="text" value="Morgan" class="w-full bg-theme border border-theme-border rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-primary">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Email</label>
+                                        <input type="email" value="alex.morgan@patient.novamed.org" class="w-full bg-theme border border-theme-border rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-primary">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Allergies &amp; Emergency Contact</label>
+                                        <textarea rows="4" class="w-full bg-theme border border-theme-border rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-primary">No known drug allergies. Primary Insurance: BlueShield PPO (#BS-44109). Emergency Contact: Jordan Morgan (+1 555-0148).</textarea>
+                                    </div>
+                                    <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold mt-4 hover:bg-primary-dark">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 11. SETTINGS SECTION -->
+                <div id="settings" class="dashboard-section hidden animate-[fadeIn_0.3s_ease-in-out]">
+                    <h1 class="text-xl font-bold mb-6">Portal Settings</h1>
+                    <div class="max-w-3xl space-y-6">
+                        <div class="bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm">
+                            <h3 class="font-bold text-base mb-4">Clinical Notifications</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center justify-between cursor-pointer">
+                                    <span class="text-sm font-medium">SMS &amp; Email appointment reminders</span>
+                                    <input type="checkbox" checked class="rounded text-primary focus:ring-primary">
+                                </label>
+                                <label class="flex items-center justify-between cursor-pointer">
+                                    <span class="text-sm font-medium">Instant alerts when lab reports are ready</span>
+                                    <input type="checkbox" checked class="rounded text-primary focus:ring-primary">
+                                </label>
+                                <label class="flex items-center justify-between cursor-pointer">
+                                    <span class="text-sm font-medium">Monthly wellness &amp; preventive checkup reminders</span>
+                                    <input type="checkbox" class="rounded text-primary focus:ring-primary">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="bg-theme-card border border-theme-border rounded-2xl p-6 shadow-sm">
+                            <h3 class="font-bold text-base mb-4">Account Security</h3>
+                            <button type="button" class="border border-theme-border text-theme-text font-medium px-4 py-2 rounded-lg hover:bg-theme text-sm">Update Portal Password</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Clinical Report Viewer Modal -->
+    <div id="reportModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-theme-card border border-theme-border rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl">
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <div>
+                    <span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase mb-2">Verified Clinical Report</span>
+                    <h3 id="reportModalTitle" class="text-xl font-bold">Diagnostic Report</h3>
+                    <p id="reportModalMeta" class="text-xs text-theme-muted mt-1"></p>
+                </div>
+                <button id="reportModalClose" type="button" class="p-2 rounded-full hover:bg-theme text-theme-muted">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="bg-theme border border-theme-border rounded-2xl p-4 text-sm leading-relaxed text-theme-text mb-6">
+                <p id="reportModalBody"></p>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('reportModalClose').click()" class="px-5 py-2.5 rounded-xl border border-theme-border text-sm font-semibold hover:bg-theme">Close</button>
+                <button type="button" onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark">Print / Save PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="portalToast" class="hidden fixed bottom-6 right-6 z-50 bg-primary text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-semibold">
+        <i data-lucide="check-circle-2" class="w-5 h-5 shrink-0"></i>
+        <span id="portalToastMessage">Action completed.</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@0.260.0"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/patient-portal.js"></script>
+    
+    <!-- Initialize Chart.js logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if(typeof lucide !== 'undefined') lucide.createIcons();
+
+            const ctx = document.getElementById('activityChart');
+            if (ctx && typeof Chart !== 'undefined') {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Resting Heart Rate (BPM)',
+                            data: [72, 70, 71, 69, 68, 70, 69],
+                            borderColor: '#0f766e',
+                            backgroundColor: 'rgba(15, 118, 110, 0.12)',
+                            borderWidth: 2.5,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                min: 60,
+                                max: 85,
+                                grid: { color: 'rgba(148, 163, 184, 0.2)' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

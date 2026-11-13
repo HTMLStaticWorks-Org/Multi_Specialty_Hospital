@@ -1,2 +1,2 @@
-# Multi_Specialty_Hospital
-Automated website repository for Multi_Specialty_Hospital
+# NovaMed Multi-Specialty Hospital
+Website and Patient Portal for NovaMed Multi-Specialty Hospital.
